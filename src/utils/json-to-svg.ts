@@ -1,9 +1,9 @@
 import { stringify } from "svgson";
-import { readFileSync } from "fs";
 
 import { Icons } from "../../out/type";
 
-export const json2svg = (base: string, icon: Icons) => {
-  const fileContent = readFileSync(`out/${base}-${icon}.json`).toString();
-  console.log(stringify(JSON.parse(fileContent)));
+export const json2svg = async (base: string, icon: Icons) => {
+  const fileContent = await fetch(`./${base}-${icon}.json`);
+  const content = await fileContent.json();
+  return stringify(content);
 };
