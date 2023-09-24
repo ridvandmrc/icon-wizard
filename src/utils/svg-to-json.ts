@@ -1,6 +1,12 @@
 import { parse } from "svgson";
 
-import { readdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  rmSync,
+} from "fs";
 
 const flatFolder = (folderPath: string): string[] => {
   let icons: string[] = [];
@@ -24,11 +30,31 @@ export const svg2json = async (folderPath: string) => {
       const contentJson = await parse(content);
 
       writeFileSync(
-        `out/${filePath.replaceAll("/", "-").replace(".svg", ".json")}`,
+        `out/${filePath.replace("/", "-").replace(".svg", ".json")}`,
         JSON.stringify(contentJson)
       );
-
-      console.log("content: ", contentJson);
     })
   );
+  generateType(folderPath);
+};
+
+const generateType = (folderPath: string) => {
+  const folder = readdirSync("out");
+  const outPath = "out/type.ts";
+  const fileType =
+    `export type Icons = ` +
+    folder
+      .filter((fileName) => fileName.includes(".json"))
+      .map(
+        (fileName) =>
+          `"${fileName
+            .replace(".json", "")
+            .replace(`${folderPath}-`, "")}"`
+      )
+      .join("\n| ") +
+    ";";
+
+  console.log("ada: ", existsSync(outPath));
+  existsSync(outPath) && rmSync(outPath);
+  writeFileSync("out/type.ts", fileType, { flag: "a+" });
 };

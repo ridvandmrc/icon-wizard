@@ -1,5 +1,5 @@
 console.log("testt");
-import { svg2json } from "./utils";
+import { json2svg, svg2json } from "./utils";
 
-console.log();
 svg2json(`icon`);
+json2svg("icon", "animals-tiger");

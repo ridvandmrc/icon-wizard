@@ -8,7 +8,7 @@
     "prebuild": "npm run remove",
     "build": "./node_modules/typescript/bin/tsc --declaration",
     "prepare-release": "npx standard-version",
-    "execute": "node ./dist/index.js"
+    "execute": "node ./dist/src/index.js"
   },
   "author": "Rıdvan Demirci",
   "license": "ISC",
