@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "remove": "rimraf dist",
+    "remove": "rimraf dist && rimraf out/*.json && rimraf out/*.html",
     "prebuild": "npm run remove",
-    "build": "./node_modules/typescript/bin/tsc --declaration",
+    "build": "./node_modules/typescript/bin/tsc --declaration && npm run compress",
+    "compress": "npx webpack",
     "prepare-release": "npx standard-version",
-    "execute": "node ./dist/src/index.js"
+    "postbuild": "node ./dist/index.js"
   },
   "author": "Rıdvan Demirci",
   "license": "ISC",

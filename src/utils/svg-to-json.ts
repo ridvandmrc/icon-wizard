@@ -24,21 +24,23 @@ const flatFolder = (folderPath: string): string[] => {
 
 export const svg2json = async (folderPath: string) => {
   const folder = flatFolder(folderPath);
-  Promise.all(
+  await Promise.all(
     folder.map(async (filePath) => {
       const content = readFileSync(filePath).toString();
       const contentJson = await parse(content);
 
       writeFileSync(
-        `out/${filePath.replace("/", "-").replace(".svg", ".json")}`,
+        `out/${filePath.replaceAll("/", "-").replaceAll(".svg", ".json")}`,
         JSON.stringify(contentJson)
       );
     })
   );
-  generateType(folderPath);
+  createHTMLFile();
+  // generateType(folderPath);
 };
 
-const generateType = (folderPath: string) => {
+// TODO: use type
+export const generateType = (folderPath: string) => {
   const folder = readdirSync("out");
   const outPath = "out/type.ts";
   const fileType =
@@ -47,9 +49,7 @@ const generateType = (folderPath: string) => {
       .filter((fileName) => fileName.includes(".json"))
       .map(
         (fileName) =>
-          `"${fileName
-            .replace(".json", "")
-            .replace(`${folderPath}-`, "")}"`
+          `"${fileName.replace(".json", "").replace(`${folderPath}-`, "")}"`
       )
       .join("\n| ") +
     ";";
@@ -57,4 +57,35 @@ const generateType = (folderPath: string) => {
   console.log("ada: ", existsSync(outPath));
   existsSync(outPath) && rmSync(outPath);
   writeFileSync("out/type.ts", fileType, { flag: "a+" });
+};
+
+export const createHTMLFile = () => {
+  const files = readdirSync("out");
+  console.log(files);
+  const htmlContent = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Icon wizard</title>
+      <script>
+        var exports = {};
+      </script>
+      <script type="module" src="./main.js"></script>
+    </head>
+    <body>
+    ${files
+      .filter((file) => file.includes(".json"))
+      .map(
+        (icon) =>
+          `<icon-wizard
+          style="width: 100px; height: 100px"
+          icon=${icon.replace(".json", "").replace(`icon-`, "")}
+        ></icon-wizard>`
+      )
+      .join("\n")}
+    </body>
+  </html>
+  `;
+  writeFileSync("out/index.html", htmlContent);
 };

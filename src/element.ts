@@ -9,9 +9,10 @@ class IconElement extends HTMLElement {
     const icon = this.getAttribute("icon");
     const img = await json2svg("icon", icon as any);
 
-    this.innerHTML = `<a href="#">${img}</a>`;
+    this.innerHTML = `${img}`;
+    this.style.display = "flex";
+    this.style.width = "100px";
+    this.style.height = "100px";
   }
 }
-customElements.define("ridvan-icon", IconElement);
-
-console.log("test 123");
+customElements.define("icon-wizard", IconElement);
