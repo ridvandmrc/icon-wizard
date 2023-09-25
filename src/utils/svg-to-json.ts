@@ -72,18 +72,29 @@ export const createHTMLFile = () => {
         var exports = {};
       </script>
       <script type="module" src="./main.js"></script>
+      <style>
+      .icon-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .icon-wrapper  svg {
+        width:75%;
+        height:75%;
+      }
+      </style>
     </head>
     <body>
+    <div class="icon-wrapper">
     ${files
       .filter((file) => file.includes(".json"))
       .map(
         (icon) =>
-          `<icon-wizard
-          style="width: 100px; height: 100px"
-          icon=${icon.replace(".json", "").replace(`icon-`, "")}
+          `<icon-wizard icon=${icon.replace(".json", "").replace(`icon-`, "")}
         ></icon-wizard>`
       )
       .join("\n")}
+      </div>
     </body>
   </html>
   `;

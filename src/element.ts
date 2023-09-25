@@ -10,9 +10,6 @@ class IconElement extends HTMLElement {
     const img = await json2svg("icon", icon as any);
 
     this.innerHTML = `${img}`;
-    this.style.display = "flex";
-    this.style.width = "100px";
-    this.style.height = "100px";
   }
 }
 customElements.define("icon-wizard", IconElement);
